@@ -19,6 +19,8 @@ val_pes = c_pes(fit_idx:end);
 total_paw = c_paw;
 total_pes = c_pes;
 
+fs = 1 / (Ts * 10^-3);
+
 %% Data objects
 
 fit_data = iddata(fit_paw, fit_pes, Ts * 10^-3);
@@ -33,7 +35,7 @@ val_data.InputName = 'Esophageal Pressure';
 val_data.OutputName = 'Airway Pressure';
 val_data.InputUnit = 'cmH20';
 val_data.OutputUnit = 'cmH20';
-val_data.Tstart = 0.0;
+val_data.Tstart = size(fit_data,1)* Ts * (10^-3);
 
 total_data = iddata(total_paw, total_pes, Ts * 10^-3);
 total_data.InputName = 'Esophageal Pressure';
@@ -50,9 +52,11 @@ plot(total_data);
 
 %% Filtered Dataset
 
-smooth_paw = lowpass(c_paw, 4, 1 / (Ts * 10^-3));
-smooth_pes = lowpass(c_pes, 4, 1 / (Ts * 10^-3));
-one_percent = round(samples/100);
+% Passband filter 25 rad/s?
+
+smooth_paw = lowpass(c_paw, 2, fs);
+smooth_pes = lowpass(c_pes, 2, fs);
+one_percent = round(samples/200);
 smooth_paw = smooth_paw(one_percent:samples-one_percent);
 smooth_pes = smooth_pes(one_percent:samples-one_percent);
 fit_idx = round(size(smooth_paw, 1) * fit_ratio);
@@ -78,7 +82,7 @@ val_data.InputName = 'Esophageal Pressure';
 val_data.OutputName = 'Airway Pressure';
 val_data.InputUnit = 'cmH20';
 val_data.OutputUnit = 'cmH20';
-val_data.Tstart = 0.0;
+val_data.Tstart = size(fit_data,1)*Ts*(10^-3);
 
 total_data = iddata(smooth_total_paw, smooth_total_pes, Ts * 10^-3);
 total_data.InputName = 'Esophageal Pressure';
