@@ -61,7 +61,8 @@ for i = 1:(size(ins_marks, 2)-1)
     
     % remove offset
     paw = paw - median(paw(end-10:end));
-    pes = pes - median(paw(end-10:end));
+    pes = pes - median(pes(end-10:end));
+    pes_hat = pes_hat - median(pes_hat(end-10:end));
 
     ccw = 87.8; 
     
@@ -145,14 +146,14 @@ figure;
 link_plot(1) = subplot(2,1,1);
 plot(eval_rrs, 'k-o'); hold on;
 plot(orig_rrs, 'b-o'); hold on;
-yline(actual_rrs, '--r', 'HandleVisibility', 'off');
-legend('corrected','original');
+yline(actual_rrs, '--r');
+legend('corrected', 'original', 'measured');
 title('Respiratory system resistance');
 link_plot(2) = subplot(2,1,2);
 plot(eval_crs, 'k-o'); hold on;
 plot(orig_crs, 'b-o'); hold on;
-yline(actual_crs, '--r', 'HandleVisibility', 'off');
-legend('corrected','original');
+yline(actual_crs, '--r');
+legend('corrected', 'original', 'measured');
 title('Respiratory system compliance');
 linkaxes(link_plot, 'x');
 
